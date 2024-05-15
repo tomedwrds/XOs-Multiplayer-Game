@@ -18,5 +18,13 @@
     <ClCompile Include="XOs Multiplayer Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="XOsServer.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="XOServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

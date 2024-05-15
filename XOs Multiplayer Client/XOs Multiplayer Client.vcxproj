@@ -128,6 +128,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="XOs Multiplayer Client.cpp" />
+    <ClCompile Include="XOsClient.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="XOsClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
