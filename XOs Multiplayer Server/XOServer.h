@@ -5,6 +5,7 @@
 #include <iphlpapi.h>
 #include <ws2tcpip.h>
 #include <string>
+#include "XOsRequest.h"
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
 

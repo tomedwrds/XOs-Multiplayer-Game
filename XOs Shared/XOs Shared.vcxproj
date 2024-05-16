@@ -21,9 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{51a252c7-159b-4f08-a167-33c8f2261f87}</ProjectGuid>
-    <RootNamespace>XOsMultiplayerServer</RootNamespace>
+    <ProjectGuid>{02407569-1b2a-471a-9ce7-65daeed65f9a}</ProjectGuid>
+    <RootNamespace>XOsShared</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>XOs Multiplayer Shared</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -104,7 +105,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\tomed\source\repos\XOs Multiplayer Server\XOs Shared\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,11 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="XOs Multiplayer Server.cpp" />
-    <ClCompile Include="XOsServer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="XOServer.h" />
+    <ClInclude Include="XOsRequest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
