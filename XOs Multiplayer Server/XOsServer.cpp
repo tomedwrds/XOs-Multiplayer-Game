@@ -52,12 +52,15 @@ void XOsServer::beginListen() {
 }
 
 void XOsServer::acceptConnection() {
-    SOCKET clientSocket{ INVALID_SOCKET };
-    clientSocket = accept(m_socket, NULL, NULL);
-    if (clientSocket < 0) {
-        serverError("Failed to accept connection");
+    while (1) {
+        SOCKET clientSocket{ INVALID_SOCKET };
+        clientSocket = accept(m_socket, NULL, NULL);
+        if (clientSocket < 0) {
+            serverError("Failed to accept connection");
+        }
+        std::thread workerThread(&XOsServer::serverActive, this, clientSocket);
+        workerThread.detach();
     }
-    serverActive(clientSocket);
 }
 
 void XOsServer::serverActive(int clientSocket) {

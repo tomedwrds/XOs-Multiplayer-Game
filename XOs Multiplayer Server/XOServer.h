@@ -6,6 +6,8 @@
 #include <ws2tcpip.h>
 #include <string>
 #include "XOsRequestFormat.h"
+#include <thread>
+#include <vector>
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
 
