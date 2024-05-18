@@ -63,8 +63,8 @@ void XOsClient::seralizeAndSendData(XOsRequestType rt, char* payload, char paylo
 
 void XOsClient::clientActive() {
 
-    char data[200]{ "hello world" };
-    seralizeAndSendData(XOsRequestType::JOIN, ((char*)data), (char) strlen(data));
+    char data[100]{ "hello world" };
+    seralizeAndSendData(XOsRequestType::JOIN, ((char*)data), (char) strlen(data) + 1);
     
 
  

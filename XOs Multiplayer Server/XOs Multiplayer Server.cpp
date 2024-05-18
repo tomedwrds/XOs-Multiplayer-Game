@@ -6,5 +6,5 @@ int main()
 {
     XOsServer server = XOsServer();
     server.beginListen();
-    server.acceptConnections();
+    server.acceptConnection();
 }
