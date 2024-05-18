@@ -22,13 +22,7 @@ struct XOsRequest {
 	XOsRequestPayload messagePayload;
 };
 
-enum XOsResponseType {
-	JOIN_ACCEPT,
-	LIST_DATA,
-	CHALLENGE_REQUEST,
-	MOVE_ACCEPT,
-	GAME_STATE
-};
+
 
 union XOsResponsePayload {
 	int opponentAccepted;

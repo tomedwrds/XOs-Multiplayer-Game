@@ -104,7 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\tomed\source\repos\XOs Multiplayer Server\XOs Shared\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="XOs Multiplayer Server.cpp" />
+    <ClCompile Include="XOsRequestFormat.h" />
     <ClCompile Include="XOsServer.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -63,12 +63,13 @@ void XOsServer::acceptConnections() {
         dataSize = recv(clientSocket, recvbuf, recvbuflen, 0);
         if (dataSize < 0) {
             serverError("Failed to recieve");
-        } else {
+        } else if (dataSize > 0) {
             deserializeData(recvbuf);
         }
 
-    } while (dataSize >= 0);
+    } while (dataSize > 0);
     std::cout << "Connection Closed\n";
+    while (1);
 }
 
 void XOsServer::deserializeData(char* recvBuffer) {
@@ -121,7 +122,6 @@ void XOsServer::serverError(const std::string & errorMessage) {
 }
 
 void XOsServer::displayConnection(addrinfo * addressInfo) {
-    //Display IP address / port
     char ip[NI_MAXHOST];
     char port[NI_MAXSERV];
     if (getnameinfo(addressInfo->ai_addr, addressInfo->ai_addrlen, ip, sizeof(ip), port, sizeof(port), NI_NUMERICHOST | NI_NUMERICSERV) < 0) {

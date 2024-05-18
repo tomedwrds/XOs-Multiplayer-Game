@@ -5,9 +5,11 @@
 #include <iphlpapi.h>
 #include <ws2tcpip.h>
 #include <string>
+#include "XOsRequestFormat.h"
+
+
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
-#define HEADER_SIZE 2
 
 #pragma comment(lib, "Ws2_32.lib")
 class XOsClient {

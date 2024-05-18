@@ -21,6 +21,9 @@
     <ClCompile Include="XOsServer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="XOsRequestFormat.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XOServer.h">

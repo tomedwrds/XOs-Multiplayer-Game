@@ -65,16 +65,6 @@ void XOsClient::displayConnection(addrinfo* addressInfo) {
     std::cout << "Server opened conenction on ip: " << ip << ":" << port << '\n';
 }
 
-enum XOsRequestType : char {
-    JOIN,
-    LIST,
-    CHALLENGE,
-    ACCEPT,
-    MOVE,
-    DISCONNECT
-};
-
-
 void seralizeData(XOsRequestType rt, char* payload, char payloadSize, int socket) {
     const int headerSize{ 2 };
     char* sendBuffer = new char[payloadSize + headerSize];
@@ -105,13 +95,10 @@ void XOsClient::sendData() {
     int iResult;
 
     // Send an initial buffer
-    char input;
-    std::cin >> input;
     iResult = send(m_socket, sendbuf, (int)strlen(sendbuf), 0);
     if (iResult == SOCKET_ERROR) {
         serverError("Failed to send data");
     }
-    std::cout << WSAGetLastError();
     iResult = shutdown(m_socket, SD_SEND);
 
     while (1);
