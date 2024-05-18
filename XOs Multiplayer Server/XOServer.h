@@ -22,8 +22,8 @@ private:
 	void createServer();
 	void serverError(const std::string &);
 	void displayConnection(addrinfo *);
-	void deserializeData(char* recvBuffer);
-
+	void deserializeData(char* recvBuffer, int);
+	void seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize, int);
 	int m_socket{};
 	int m_debug{ true };
 };

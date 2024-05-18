@@ -70,7 +70,7 @@ void XOsServer::serverActive(int clientSocket) {
         if (dataSize < 0) {
             serverError("Failed to recieve");
         } else if (dataSize > 0) {
-            deserializeData(recvbuf);
+            deserializeData(recvbuf, clientSocket);
         }
 
     } while (dataSize > 0);
@@ -79,7 +79,7 @@ void XOsServer::serverActive(int clientSocket) {
 }
 
 
-void XOsServer::deserializeData(char* recvBuffer) {
+void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
     int payloadSize = (int) recvBuffer[1];
 
@@ -87,6 +87,10 @@ void XOsServer::deserializeData(char* recvBuffer) {
     case XOsRequestType::JOIN:
         if (m_debug) {
             std::cout << "JOIN ";
+        }
+        {
+            char data[100]{ "connection accepted" };
+            seralizeAndSendData(XOsRequestType::ACCEPT, ((char*)data), (char)strlen(data) + 1, clientSocket);
         }
         break;
     case XOsRequestType::ACCEPT:
@@ -120,6 +124,21 @@ void XOsServer::deserializeData(char* recvBuffer) {
         std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
     }
 }
+
+void XOsServer::seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize, int clientSocket) {
+    char* sendBuffer = new char[payloadSize + HEADER_SIZE];
+    sendBuffer[0] = rt;
+    sendBuffer[1] = payloadSize;
+
+    for (int i = HEADER_SIZE; i < payloadSize + HEADER_SIZE; i++) {
+        sendBuffer[i] = (char)payload[i - HEADER_SIZE];
+    }
+    if (send(clientSocket, sendBuffer, payloadSize + HEADER_SIZE, 0) < 0) {
+        serverError("Failed to send data");
+    }
+    delete[] sendBuffer;
+}
+
 
 void XOsServer::serverError(const std::string & errorMessage) {
     std::cout << "ERROR: " << errorMessage << " CODE: " << WSAGetLastError() << '\n';
