@@ -75,7 +75,7 @@ enum XOsRequestType : char {
 };
 
 
-void seralizePayload(XOsRequestType rt, char* payload, char payloadSize, int socket) {
+void seralizeData(XOsRequestType rt, char* payload, char payloadSize, int socket) {
     const int headerSize{ 2 };
     char* sendBuffer = new char[payloadSize + headerSize];
     
@@ -85,7 +85,6 @@ void seralizePayload(XOsRequestType rt, char* payload, char payloadSize, int soc
     for (int i = headerSize; i < payloadSize + headerSize; i++) {
         sendBuffer[i] = (char)payload[i - headerSize];
     }
-
     send(socket, sendBuffer, payloadSize + headerSize, 0);
     delete[] sendBuffer;
 }
@@ -95,7 +94,7 @@ void seralizePayload(XOsRequestType rt, char* payload, char payloadSize, int soc
 void XOsClient::sendData() {
 
     char data[200]{ "hello world" };
-    seralizePayload(XOsRequestType::JOIN, ((char*)data), 20, m_socket);
+    seralizeData(XOsRequestType::ACCEPT, ((char*)data), 20, m_socket);
 
 
     int recvbuflen = DEFAULT_BUFFER_LENGTH;

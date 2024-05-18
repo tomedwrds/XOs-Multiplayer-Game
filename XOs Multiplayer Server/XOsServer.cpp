@@ -7,13 +7,8 @@ XOsServer::XOsServer() {
 XOsServer::~XOsServer() {
     closesocket(m_socket);
     WSACleanup();
-    //exit(0);
+    exit(0);
 }
-
-
-
-
-
 
 void XOsServer::createServer() {
     
@@ -56,6 +51,16 @@ void XOsServer::beginListen() {
     }
 }
 
+void deserializeData(char* recvBuffer) {
+    XOsRequestType rt = (XOsRequestType)recvBuffer[0];
+    char payloadSize = recvBuffer[1];
+
+    switch (rt) {
+    case XOsRequestType::JOIN:
+        break;
+    }
+}
+
 void XOsServer::acceptConnection() {
 
     SOCKET ClientSocket{ INVALID_SOCKET };
@@ -73,6 +78,7 @@ void XOsServer::acceptConnection() {
             printf("Bytes received: %d\n", iResult);
             // Echo the buffer back to the sender
             iSendResult = send(ClientSocket, recvbuf, iResult, 0);
+            deserializeData(recvbuf);
             if (iSendResult == SOCKET_ERROR) {
                 serverError("Failed to send");
             }
