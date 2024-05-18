@@ -94,7 +94,7 @@ void seralizeData(XOsRequestType rt, char* payload, char payloadSize, int socket
 void XOsClient::sendData() {
 
     char data[200]{ "hello world" };
-    seralizeData(XOsRequestType::ACCEPT, ((char*)data), 20, m_socket);
+    seralizeData(XOsRequestType::JOIN, ((char*)data), 20, m_socket);
 
 
     int recvbuflen = DEFAULT_BUFFER_LENGTH;
@@ -105,7 +105,8 @@ void XOsClient::sendData() {
     int iResult;
 
     // Send an initial buffer
-
+    char input;
+    std::cin >> input;
     iResult = send(m_socket, sendbuf, (int)strlen(sendbuf), 0);
     if (iResult == SOCKET_ERROR) {
         serverError("Failed to send data");
@@ -115,3 +116,4 @@ void XOsClient::sendData() {
 
     while (1);
 }
+

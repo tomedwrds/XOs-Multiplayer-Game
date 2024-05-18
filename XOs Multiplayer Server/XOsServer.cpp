@@ -51,49 +51,67 @@ void XOsServer::beginListen() {
     }
 }
 
-void deserializeData(char* recvBuffer) {
+void XOsServer::acceptConnections() {
+
+    SOCKET clientSocket{ INVALID_SOCKET };
+    clientSocket = accept(m_socket, NULL, NULL);
+    char recvbuf[DEFAULT_BUFFER_LENGTH];
+    int dataSize;
+    int recvbuflen = DEFAULT_BUFFER_LENGTH;
+
+    do {
+        dataSize = recv(clientSocket, recvbuf, recvbuflen, 0);
+        if (dataSize < 0) {
+            serverError("Failed to recieve");
+        } else {
+            deserializeData(recvbuf);
+        }
+
+    } while (dataSize >= 0);
+    std::cout << "Connection Closed\n";
+}
+
+void XOsServer::deserializeData(char* recvBuffer) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
-    char payloadSize = recvBuffer[1];
+    int payloadSize = (int) recvBuffer[1];
 
     switch (rt) {
     case XOsRequestType::JOIN:
+        if (m_debug) {
+            std::cout << "JOIN ";
+        }
+        break;
+    case XOsRequestType::ACCEPT:
+        if (m_debug) {
+            std::cout << "ACCEPT ";
+        }
+        break;
+    case XOsRequestType::DISCONNECT:
+        if (m_debug) {
+            std::cout << "DISCONNECT ";
+        }
+        break;
+    case XOsRequestType::LIST:
+        if (m_debug) {
+            std::cout << "LIST ";
+        }
+        break;
+    case XOsRequestType::MOVE:
+        if (m_debug) {
+            std::cout << "MOVE ";
+        }
+        break;
+    case XOsRequestType::CHALLENGE:
+        if (m_debug) {
+            std::cout << "CHALLENGE ";
+        }
         break;
     }
+    
+    if (m_debug) {
+        std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+    }
 }
-
-void XOsServer::acceptConnection() {
-
-    SOCKET ClientSocket{ INVALID_SOCKET };
-    ClientSocket = accept(m_socket, NULL, NULL);
-    char recvbuf[DEFAULT_BUFFER_LENGTH];
-    int iResult, iSendResult;
-    int recvbuflen = DEFAULT_BUFFER_LENGTH;
-
-
-    // Receive until the peer shuts down the connection
-    do {
-
-        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0) {
-            printf("Bytes received: %d\n", iResult);
-            // Echo the buffer back to the sender
-            iSendResult = send(ClientSocket, recvbuf, iResult, 0);
-            deserializeData(recvbuf);
-            if (iSendResult == SOCKET_ERROR) {
-                serverError("Failed to send");
-            }
-            printf("Bytes sent: %d\n", iSendResult);
-        }
-        else if (iResult == 0)
-            printf("Connection closing...\n");
-        else {
-            serverError("Failed to recieve");
-        }
-
-    } while (iResult > 0);
-    while (1);
-}
-
 
 void XOsServer::serverError(const std::string & errorMessage) {
     std::cout << "ERROR: " << errorMessage << " CODE: " << WSAGetLastError() << '\n';
