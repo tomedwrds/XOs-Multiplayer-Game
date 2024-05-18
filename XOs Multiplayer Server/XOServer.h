@@ -2,10 +2,11 @@
 
 #include <iostream>
 #include <winsock2.h>
+//#include <winsock.h>
 #include <iphlpapi.h>
 #include <ws2tcpip.h>
 #include <string>
-#include "XOsRequest.h"
+#include "XOsRequestResponse.h"
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
 

@@ -7,8 +7,12 @@ XOsServer::XOsServer() {
 XOsServer::~XOsServer() {
     closesocket(m_socket);
     WSACleanup();
-    exit(0);
+    //exit(0);
 }
+
+
+
+
 
 
 void XOsServer::createServer() {
@@ -60,6 +64,7 @@ void XOsServer::acceptConnection() {
     int iResult, iSendResult;
     int recvbuflen = DEFAULT_BUFFER_LENGTH;
 
+
     // Receive until the peer shuts down the connection
     do {
 
@@ -100,4 +105,5 @@ void XOsServer::displayConnection(addrinfo * addressInfo) {
     }
     std::cout << "Server opened conenction on ip: " << ip << ":" << port << '\n';
 }
+
 

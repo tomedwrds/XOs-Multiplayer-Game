@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-enum XOsRequestType {
+enum XOsRequestType: char{
 	JOIN,
 	LIST,
 	CHALLENGE,
@@ -11,10 +11,10 @@ enum XOsRequestType {
 
 
 union XOsRequestPayload {
+	char userName[8];
 	int userChallengeId;
 	int acceptChallenge;
 	int movePos[2];
-	char userName[8];
 };
 
 struct XOsRequest {
