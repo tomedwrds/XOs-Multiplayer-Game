@@ -51,10 +51,16 @@ void XOsServer::beginListen() {
     }
 }
 
-void XOsServer::acceptConnections() {
-
+void XOsServer::acceptConnection() {
     SOCKET clientSocket{ INVALID_SOCKET };
     clientSocket = accept(m_socket, NULL, NULL);
+    if (clientSocket < 0) {
+        serverError("Failed to accept connection");
+    }
+    serverActive(clientSocket);
+}
+
+void XOsServer::serverActive(int clientSocket) {
     char recvbuf[DEFAULT_BUFFER_LENGTH];
     int dataSize;
     int recvbuflen = DEFAULT_BUFFER_LENGTH;
@@ -71,6 +77,7 @@ void XOsServer::acceptConnections() {
     std::cout << "Connection Closed\n";
     while (1);
 }
+
 
 void XOsServer::deserializeData(char* recvBuffer) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];

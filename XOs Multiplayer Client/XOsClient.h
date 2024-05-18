@@ -18,10 +18,11 @@ public:
 	~XOsClient();
 	void serverError();
 	void openConnection();
-	void sendData();
+	void clientActive();
 private:
 	void createClient();
 	void serverError(const std::string&);
 	void displayConnection(addrinfo*);
+	void seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize);
 	int m_socket{};
 };

@@ -15,13 +15,15 @@ class XOsServer {
 public:
 	XOsServer();
 	~XOsServer();
-	void acceptConnections();
+	void acceptConnection();
 	void beginListen();
-	void deserializeData(char* recvBuffer);
+	void serverActive(int);
 private:
 	void createServer();
 	void serverError(const std::string &);
 	void displayConnection(addrinfo *);
+	void deserializeData(char* recvBuffer);
+
 	int m_socket{};
 	int m_debug{ true };
 };

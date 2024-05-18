@@ -3,5 +3,5 @@
 int main()
 {
     XOsClient client = XOsClient();
-    client.sendData();
+    client.clientActive();
 }

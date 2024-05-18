@@ -18,11 +18,9 @@ void XOsClient::createClient() {
         serverError("Failed WSA Startup");
     }
 
-    //Create server
     struct addrinfo* result, hints, *ptr;
     memset(&hints, 0, sizeof(hints));
 
-    //Assign hints
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
@@ -33,7 +31,6 @@ void XOsClient::createClient() {
         serverError("Failed to listen to get address info.");
     }
 
-    //Create socket
     ptr = result;
     m_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
     if (m_socket == INVALID_SOCKET) {
@@ -47,6 +44,38 @@ void XOsClient::createClient() {
     freeaddrinfo(result);
 }
 
+void XOsClient::seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize) {
+    char* sendBuffer = new char[payloadSize + HEADER_SIZE];
+    
+    sendBuffer[0] = rt;
+    sendBuffer[1] = payloadSize;
+    
+    for (int i = HEADER_SIZE; i < payloadSize + HEADER_SIZE; i++) {
+        sendBuffer[i] = (char)payload[i - HEADER_SIZE];
+    }
+    if (send(m_socket, sendBuffer, payloadSize + HEADER_SIZE, 0) < 0) {
+        serverError("Failed to send data");
+    }
+    delete[] sendBuffer;
+}
+
+
+
+void XOsClient::clientActive() {
+
+    char data[200]{ "hello world" };
+    seralizeAndSendData(XOsRequestType::JOIN, ((char*)data), (char) strlen(data));
+    
+
+ 
+    if (shutdown(m_socket, SD_SEND) < 0) {
+        serverError("Failed to shutdown");
+    }
+
+    while (1);
+}
+
+
 
 void XOsClient::serverError(const std::string& errorMessage) {
     std::cout << "ERROR: " << errorMessage << " CODE: " << WSAGetLastError() << '\n';
@@ -56,7 +85,6 @@ void XOsClient::serverError(const std::string& errorMessage) {
 }
 
 void XOsClient::displayConnection(addrinfo* addressInfo) {
-    //Display IP address / port
     char ip[NI_MAXHOST];
     char port[NI_MAXSERV];
     if (getnameinfo(addressInfo->ai_addr, addressInfo->ai_addrlen, ip, sizeof(ip), port, sizeof(port), NI_NUMERICHOST | NI_NUMERICSERV) < 0) {
@@ -64,43 +92,3 @@ void XOsClient::displayConnection(addrinfo* addressInfo) {
     }
     std::cout << "Server opened conenction on ip: " << ip << ":" << port << '\n';
 }
-
-void seralizeData(XOsRequestType rt, char* payload, char payloadSize, int socket) {
-    const int headerSize{ 2 };
-    char* sendBuffer = new char[payloadSize + headerSize];
-    
-    sendBuffer[0] = rt;
-    sendBuffer[1] = payloadSize;
-    
-    for (int i = headerSize; i < payloadSize + headerSize; i++) {
-        sendBuffer[i] = (char)payload[i - headerSize];
-    }
-    send(socket, sendBuffer, payloadSize + headerSize, 0);
-    delete[] sendBuffer;
-}
-
-
-
-void XOsClient::sendData() {
-
-    char data[200]{ "hello world" };
-    seralizeData(XOsRequestType::JOIN, ((char*)data), 20, m_socket);
-
-
-    int recvbuflen = DEFAULT_BUFFER_LENGTH;
-
-    const char* sendbuf = "this is a test";
-    char recvbuf[DEFAULT_BUFFER_LENGTH];
-
-    int iResult;
-
-    // Send an initial buffer
-    iResult = send(m_socket, sendbuf, (int)strlen(sendbuf), 0);
-    if (iResult == SOCKET_ERROR) {
-        serverError("Failed to send data");
-    }
-    iResult = shutdown(m_socket, SD_SEND);
-
-    while (1);
-}
-
