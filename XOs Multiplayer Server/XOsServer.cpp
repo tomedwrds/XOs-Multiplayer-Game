@@ -84,7 +84,8 @@ void XOsServer::serverActive(int clientSocket) {
 
 void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
-    int payloadSize = (int) recvBuffer[1];
+    int senderId = (int) recvBuffer[1];
+    int payloadSize = (int) recvBuffer[2];
     if (m_debug) {
         outputRequest(recvBuffer);
     }
@@ -111,7 +112,7 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
       
         break;
     case XOsRequestType::LIST:
-        
+        std::cout << "sending list";
         break;
     case XOsRequestType::MOVE:
        
@@ -126,7 +127,8 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
 
 void XOsServer::outputRequest(char* recvBuffer) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
-    int payloadSize = (int)recvBuffer[1];
+    int senderId = (int)recvBuffer[1];
+    int payloadSize = (int)recvBuffer[2];
 
     switch (rt) {
     case XOsRequestType::JOIN:
@@ -149,14 +151,15 @@ void XOsServer::outputRequest(char* recvBuffer) {
         break;
     }
 
-    std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
-    
+    std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+
 }
 
 void XOsServer::seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize, int clientSocket) {
     char* sendBuffer = new char[payloadSize + HEADER_SIZE];
     sendBuffer[0] = rt;
-    sendBuffer[1] = payloadSize;
+    sendBuffer[1] = 0xff;
+    sendBuffer[2] = payloadSize;
 
     for (int i = HEADER_SIZE; i < payloadSize + HEADER_SIZE; i++) {
         sendBuffer[i] = (char)payload[i - HEADER_SIZE];

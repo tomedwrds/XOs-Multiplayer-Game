@@ -47,7 +47,9 @@ void XOsClient::createClient() {
 
 void XOsClient::clientActive() {
     while (1) {
-        std::system("CLS");
+        if (!m_debug) {
+            std::system("CLS");
+        }
         std::cout << "=====================================================\n";
         std::cout << m_userName << " select one of the following\n";
         std::cout << "(1) View other players and request to challenge them.\n";
@@ -57,7 +59,8 @@ void XOsClient::clientActive() {
         int selectedOption;
         std::cin >> selectedOption;
         if (selectedOption == 1) {
-
+            std::cout << "Request";
+            seralizeAndSendData(XOsRequestType::LIST, (char*) &m_id, 1);
         }
         else if (selectedOption == 2) {
 
@@ -93,8 +96,15 @@ void XOsClient::clientJoin() {
 void XOsClient::seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize) {
     char* sendBuffer = new char[payloadSize + HEADER_SIZE];
     sendBuffer[0] = rt;
-    sendBuffer[1] = payloadSize;
+    if (m_id == -1) {
+        sendBuffer[1] = 0;
+    }
+    else {
+        sendBuffer[1] = (char)m_id;
+    }
+    sendBuffer[2] = payloadSize;
     
+
     for (int i = HEADER_SIZE; i < payloadSize + HEADER_SIZE; i++) {
         sendBuffer[i] = (char)payload[i - HEADER_SIZE];
     }
@@ -113,12 +123,12 @@ void XOsClient::deserializeData(char* recvBuffer) {
     }
     switch (rt) {
     case XOsRequestType::JOIN:
-        if ((int)recvBuffer[2] == JOIN_FAIL) {
+        if ((int)recvBuffer[HEADER_SIZE + 1] == JOIN_FAIL) {
             std::cout << "Username in use please try again\n";
             clientJoin();
         }
         else {
-            m_id = (int)recvBuffer[2];
+            m_id = (int)recvBuffer[HEADER_SIZE + 1];
             std::cout << "You have succesfully connected to the server " << m_userName << ".\n";
         }
         break;
@@ -137,8 +147,8 @@ void XOsClient::deserializeData(char* recvBuffer) {
 
 void XOsClient::outputRequest(char* recvBuffer) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
-    int payloadSize = (int)recvBuffer[1];
-
+    int senderId = (int)recvBuffer[1];
+    int payloadSize = (int)recvBuffer[2];
     switch (rt) {
     case XOsRequestType::JOIN:
             std::cout << "JOIN ";
@@ -165,7 +175,7 @@ void XOsClient::outputRequest(char* recvBuffer) {
       
         break;
     }
-    std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+    std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
     
 }
 
