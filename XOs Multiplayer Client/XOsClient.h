@@ -17,6 +17,7 @@ public:
 	XOsClient();
 	~XOsClient();
 	void clientActive();
+	void clientJoin();
 private:
 	void createClient();
 	void clientError(const std::string&);
@@ -25,4 +26,6 @@ private:
 	void seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize);
 	int m_socket{};
 	int m_debug{ true };
+	int m_id{};
+	std::string m_userName;
 };

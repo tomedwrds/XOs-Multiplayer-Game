@@ -7,7 +7,7 @@
 #include <string>
 #include "XOsRequestFormat.h"
 #include <thread>
-#include <vector>
+#include <map>
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
 
@@ -28,4 +28,6 @@ private:
 	void seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize, int);
 	int m_socket{};
 	int m_debug{ true };
+	char m_totalUsers{ 0 };
+	std::map<std::string, char> m_users;
 };

@@ -92,8 +92,12 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             std::cout << "JOIN ";
         }
         {
-            char data[100]{ "connection accepted" };
-            seralizeAndSendData(XOsRequestType::ACCEPT, ((char*)data), (char)strlen(data) + 1, clientSocket);
+            char response{ 0 };
+            std::string userName{ recvBuffer + HEADER_SIZE };
+            std::cout << userName;
+            m_users.insert(std::pair<std::string, char>(userName, ++m_totalUsers) );
+            
+            seralizeAndSendData(XOsRequestType::JOIN, &response, 1, clientSocket);
         }
         break;
     case XOsRequestType::ACCEPT:

@@ -46,20 +46,7 @@ void XOsClient::createClient() {
 
 
 void XOsClient::clientActive() {
-    //carry out preproccessing prior to request based on current state of client
-    char data[100]{ "hello world" };
-    seralizeAndSendData(XOsRequestType::JOIN, ((char*)data), (char)strlen(data) + 1);
-    
-    char recvbuf[DEFAULT_BUFFER_LENGTH];
-    int recvbuflen = DEFAULT_BUFFER_LENGTH;
 
-    if (recv(m_socket, recvbuf, recvbuflen, 0) < 0) {
-        clientError("Failed to recieve");
-    }
-    deserializeData(recvbuf);
-    //deseralize will handle any nesscary updates / changes that need to be made
-
-    std::cout << "Received";
     if (shutdown(m_socket, SD_SEND) < 0) {
         clientError("Failed to shutdown");
     }
@@ -67,6 +54,19 @@ void XOsClient::clientActive() {
     while (1);
 }
 
+void XOsClient::clientJoin() {
+    std::cout << "Enter your user name to continue \n";
+    std::cin >> m_userName;
+    seralizeAndSendData(XOsRequestType::JOIN, (char*)m_userName.c_str(), (char)strlen(m_userName.c_str()) + 1);
+
+    char recvbuf[DEFAULT_BUFFER_LENGTH];
+    int recvbuflen = DEFAULT_BUFFER_LENGTH;
+
+    if (recv(m_socket, recvbuf, recvbuflen, 0) < 0) {
+        clientError("Failed to recieve");
+    }
+    deserializeData(recvbuf);
+}
 
 void XOsClient::seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize) {
     char* sendBuffer = new char[payloadSize + HEADER_SIZE];
@@ -89,6 +89,14 @@ void XOsClient::deserializeData(char* recvBuffer) {
 
     switch (rt) {
     case XOsRequestType::JOIN:
+        if ((int)recvBuffer[2] == JOIN_FAIL) {
+            clientJoin();
+        }
+        else {
+            m_id = (int)recvBuffer[2];
+            std::cout << "You have succesfully connected to the server " << m_userName << ".\n";
+        }
+        
         if (m_debug) {
             std::cout << "JOIN ";
         }

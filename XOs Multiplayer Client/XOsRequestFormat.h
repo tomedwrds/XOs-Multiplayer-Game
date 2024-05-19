@@ -1,5 +1,6 @@
 #pragma once
 #define HEADER_SIZE 2
+#define JOIN_FAIL 0
 
 enum XOsResponseType {
     JOIN_ACCEPT,

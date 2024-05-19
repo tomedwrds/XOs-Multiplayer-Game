@@ -3,5 +3,6 @@
 int main()
 {
     XOsClient client = XOsClient();
+    client.clientJoin();
     client.clientActive();
 }
