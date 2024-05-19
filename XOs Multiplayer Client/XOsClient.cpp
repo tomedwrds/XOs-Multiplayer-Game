@@ -123,12 +123,12 @@ void XOsClient::deserializeData(char* recvBuffer) {
     }
     switch (rt) {
     case XOsRequestType::JOIN:
-        if ((int)recvBuffer[HEADER_SIZE + 1] == JOIN_FAIL) {
+        if ((int)recvBuffer[HEADER_SIZE] == JOIN_FAIL) {
             std::cout << "Username in use please try again\n";
             clientJoin();
         }
         else {
-            m_id = (int)recvBuffer[HEADER_SIZE + 1];
+            m_id = recvBuffer[HEADER_SIZE];
             std::cout << "You have succesfully connected to the server " << m_userName << ".\n";
         }
         break;

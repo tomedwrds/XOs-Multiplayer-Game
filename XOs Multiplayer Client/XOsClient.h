@@ -27,6 +27,6 @@ private:
 	void outputRequest(char *);
 	int m_socket{};
 	int m_debug{ true };
-	int m_id{-1};
+	char m_id{-1};
 	std::string m_userName;
 };
