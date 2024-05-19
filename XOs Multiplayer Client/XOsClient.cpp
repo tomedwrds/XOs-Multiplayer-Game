@@ -46,6 +46,28 @@ void XOsClient::createClient() {
 
 
 void XOsClient::clientActive() {
+    while (1) {
+        std::system("CLS");
+        std::cout << "=====================================================\n";
+        std::cout << m_userName << " select one of the following\n";
+        std::cout << "(1) View other players and request to challenge them.\n";
+        std::cout << "(2) View players that have challenged you.\n";
+        std::cout << "(3) Exit\n";
+        std::cout << "=====================================================\n";
+        int selectedOption;
+        std::cin >> selectedOption;
+        if (selectedOption == 1) {
+
+        }
+        else if (selectedOption == 2) {
+
+        }
+        else if (selectedOption == 3) {
+
+        }
+        
+    }
+
 
     if (shutdown(m_socket, SD_SEND) < 0) {
         clientError("Failed to shutdown");
