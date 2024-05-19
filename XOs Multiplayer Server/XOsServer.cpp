@@ -92,12 +92,16 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             std::cout << "JOIN ";
         }
         {
-            char response{ 0 };
             std::string userName{ recvBuffer + HEADER_SIZE };
-            std::cout << userName;
-            m_users.insert(std::pair<std::string, char>(userName, ++m_totalUsers) );
+            if (m_users.count(userName) == 0) {
+                m_users.insert(std::pair<std::string, char>(userName, ++m_totalUsers));
+                seralizeAndSendData(XOsRequestType::JOIN, &m_totalUsers, 1, clientSocket);
+            }
+            else {
+                char responseFailed{ JOIN_FAIL };
+                seralizeAndSendData(XOsRequestType::JOIN, &responseFailed, 1, clientSocket);
+            }
             
-            seralizeAndSendData(XOsRequestType::JOIN, &response, 1, clientSocket);
         }
         break;
     case XOsRequestType::ACCEPT:
