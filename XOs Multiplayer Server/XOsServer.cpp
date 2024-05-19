@@ -85,12 +85,12 @@ void XOsServer::serverActive(int clientSocket) {
 void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
     int payloadSize = (int) recvBuffer[1];
+    if (m_debug) {
+        outputRequest(recvBuffer);
+    }
 
     switch (rt) {
-    case XOsRequestType::JOIN:
-        if (m_debug) {
-            std::cout << "JOIN ";
-        }
+    case XOsRequestType::JOIN:     
         {
             std::string userName{ recvBuffer + HEADER_SIZE };
             if (m_users.count(userName) == 0) {
@@ -105,35 +105,52 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         }
         break;
     case XOsRequestType::ACCEPT:
-        if (m_debug) {
-            std::cout << "ACCEPT ";
-        }
+       
         break;
     case XOsRequestType::DISCONNECT:
-        if (m_debug) {
-            std::cout << "DISCONNECT ";
-        }
+      
         break;
     case XOsRequestType::LIST:
-        if (m_debug) {
-            std::cout << "LIST ";
-        }
+        
         break;
     case XOsRequestType::MOVE:
-        if (m_debug) {
-            std::cout << "MOVE ";
-        }
+       
         break;
     case XOsRequestType::CHALLENGE:
-        if (m_debug) {
-            std::cout << "CHALLENGE ";
-        }
+        
         break;
     }
     
-    if (m_debug) {
-        std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+    
+}
+
+void XOsServer::outputRequest(char* recvBuffer) {
+    XOsRequestType rt = (XOsRequestType)recvBuffer[0];
+    int payloadSize = (int)recvBuffer[1];
+
+    switch (rt) {
+    case XOsRequestType::JOIN:
+        std::cout << "JOIN ";
+        break;
+    case XOsRequestType::ACCEPT:
+        std::cout << "ACCEPT ";
+        break;
+    case XOsRequestType::DISCONNECT:
+        std::cout << "DISCONNECT ";
+        break;
+    case XOsRequestType::LIST:
+        std::cout << "LIST ";
+        break;
+    case XOsRequestType::MOVE:
+        std::cout << "MOVE ";
+        break;
+    case XOsRequestType::CHALLENGE:
+        std::cout << "CHALLENGE ";
+        break;
     }
+
+    std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+    
 }
 
 void XOsServer::seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize, int clientSocket) {

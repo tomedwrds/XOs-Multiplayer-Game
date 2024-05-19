@@ -86,51 +86,65 @@ void XOsClient::seralizeAndSendData(XOsRequestType rt, char* payload, char paylo
 void XOsClient::deserializeData(char* recvBuffer) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
     int payloadSize = (int)recvBuffer[1];
-
+    if (m_debug) {
+        outputRequest(recvBuffer);
+    }
     switch (rt) {
     case XOsRequestType::JOIN:
         if ((int)recvBuffer[2] == JOIN_FAIL) {
+            std::cout << "Username in use please try again\n";
             clientJoin();
         }
         else {
             m_id = (int)recvBuffer[2];
             std::cout << "You have succesfully connected to the server " << m_userName << ".\n";
         }
-        
-        if (m_debug) {
-            std::cout << "JOIN ";
-        }
         break;
     case XOsRequestType::ACCEPT:
-        if (m_debug) {
-            std::cout << "ACCEPT ";
-        }
         break;
-    case XOsRequestType::DISCONNECT:
-        if (m_debug) {
-            std::cout << "DISCONNECT ";
-        }
+    case XOsRequestType::DISCONNECT:   
         break;
-    case XOsRequestType::LIST:
-        if (m_debug) {
-            std::cout << "LIST ";
-        }
+    case XOsRequestType::LIST:   
         break;
-    case XOsRequestType::MOVE:
-        if (m_debug) {
-            std::cout << "MOVE ";
-        }
+    case XOsRequestType::MOVE:     
         break;
     case XOsRequestType::CHALLENGE:
-        if (m_debug) {
-            std::cout << "CHALLENGE ";
-        }
         break;
     }
+}
 
-    if (m_debug) {
-        std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+void XOsClient::outputRequest(char* recvBuffer) {
+    XOsRequestType rt = (XOsRequestType)recvBuffer[0];
+    int payloadSize = (int)recvBuffer[1];
+
+    switch (rt) {
+    case XOsRequestType::JOIN:
+            std::cout << "JOIN ";
+    
+        break;
+    case XOsRequestType::ACCEPT:
+            std::cout << "ACCEPT ";
+        
+        break;
+    case XOsRequestType::DISCONNECT:
+            std::cout << "DISCONNECT ";
+        
+        break;
+    case XOsRequestType::LIST:
+            std::cout << "LIST ";
+        
+        break;
+    case XOsRequestType::MOVE:
+            std::cout << "MOVE ";
+        
+        break;
+    case XOsRequestType::CHALLENGE:
+         std::cout << "CHALLENGE ";
+      
+        break;
     }
+    std::cout << "Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+    
 }
 
 

@@ -26,6 +26,7 @@ private:
 	void displayConnection(addrinfo *);
 	void deserializeData(char* recvBuffer, int);
 	void seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize, int);
+	void outputRequest(char*);
 	int m_socket{};
 	int m_debug{ true };
 	char m_totalUsers{ 0 };
