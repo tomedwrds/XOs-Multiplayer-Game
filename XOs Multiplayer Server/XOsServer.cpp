@@ -112,7 +112,19 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
       
         break;
     case XOsRequestType::LIST:
-        std::cout << "sending list";
+    {
+        char* userNames = new char[m_users.size() * (USERNAME_LENGTH+1)];
+
+        int namesAdded = 0;
+        for (auto const& x : m_users) {
+            userNames[namesAdded * (USERNAME_LENGTH + 1)] = x.second;
+            std::copy(x.first.c_str(), x.first.c_str() + USERNAME_LENGTH, userNames + (namesAdded * (USERNAME_LENGTH + 1) + 1));
+            namesAdded++;
+        }
+        seralizeAndSendData(XOsRequestType::LIST, userNames, m_users.size() * (USERNAME_LENGTH + 1), clientSocket);
+        delete[] userNames;
+    }
+        
         break;
     case XOsRequestType::MOVE:
        

@@ -7,6 +7,7 @@
 #include <string>
 #include "XOsRequestFormat.h"
 #include <thread>
+#include <algorithm>
 #include <map>
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"

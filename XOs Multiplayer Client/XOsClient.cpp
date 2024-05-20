@@ -59,7 +59,6 @@ void XOsClient::clientActive() {
         int selectedOption;
         std::cin >> selectedOption;
         if (selectedOption == 1) {
-            std::cout << "Request";
             seralizeAndSendData(XOsRequestType::LIST, (char*) &m_id, 1);
         }
         else if (selectedOption == 2) {
