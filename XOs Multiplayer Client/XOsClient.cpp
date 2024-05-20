@@ -60,6 +60,13 @@ void XOsClient::clientActive() {
         std::cin >> selectedOption;
         if (selectedOption == 1) {
             seralizeAndSendData(XOsRequestType::LIST, (char*) &m_id, 1);
+            char recvbuf[DEFAULT_BUFFER_LENGTH];
+            int recvbuflen = DEFAULT_BUFFER_LENGTH;
+
+            if (recv(m_socket, recvbuf, recvbuflen, 0) < 0) {
+                clientError("Failed to recieve");
+            }
+            deserializeData(recvbuf);
         }
         else if (selectedOption == 2) {
 
@@ -116,7 +123,8 @@ void XOsClient::seralizeAndSendData(XOsRequestType rt, char* payload, char paylo
 
 void XOsClient::deserializeData(char* recvBuffer) {
     XOsRequestType rt = (XOsRequestType)recvBuffer[0];
-    int payloadSize = (int)recvBuffer[1];
+    int senderId = (int)recvBuffer[1];
+    int payloadSize = (int)recvBuffer[2];
     if (m_debug) {
         outputRequest(recvBuffer);
     }
@@ -136,6 +144,16 @@ void XOsClient::deserializeData(char* recvBuffer) {
     case XOsRequestType::DISCONNECT:   
         break;
     case XOsRequestType::LIST:   
+
+        std::cout << "=====================================================\n";
+        std::cout << m_userName << " select one of the following to challenge\n";
+        for (int i = 0; i*16 < payloadSize; i ++) {
+            std::cout << "(" << i + 1 << ")" << std::string(recvBuffer + HEADER_SIZE + i * 16 + 1, recvBuffer + HEADER_SIZE + (i + 1) * 16) << "\n";
+        }
+        std::cout << "=====================================================\n";
+
+
+
         break;
     case XOsRequestType::MOVE:     
         break;
