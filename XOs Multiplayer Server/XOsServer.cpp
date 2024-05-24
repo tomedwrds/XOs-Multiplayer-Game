@@ -134,8 +134,8 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         char challengedClient = recvBuffer[HEADER_SIZE];
         std::cout << (int)challengedClient;
         if (m_challenges.count(challengedClient)) {
-            std::set<char> &currentChallenges = m_challenges.at(challengedClient);
-            currentChallenges.insert((char)senderId);
+            m_challenges[challengedClient].insert(senderId);
+
         }
         else {
             std::set<char> currentChallenges { (char)senderId };
