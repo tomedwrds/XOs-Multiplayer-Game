@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <map>
 #include <set>
+#include <vector>
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
 

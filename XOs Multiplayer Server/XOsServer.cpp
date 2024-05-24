@@ -106,8 +106,24 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             
         }
         break;
-    case XOsRequestType::ACCEPT:
-       
+    case XOsRequestType::CHALLENGERS:
+    {
+        //get the list of challengers
+        std::set<char> challengers = m_challenges[senderId];
+        char* userNames = new char[(challengers.size() * (USERNAME_LENGTH + 1))];
+
+        char namesAdded = 0;
+        for (auto const& x : m_users) {
+            if (challengers.find(x.second) != challengers.end()) {
+                userNames[namesAdded * (USERNAME_LENGTH + 1)] = x.second;
+                std::copy(x.first.c_str(), x.first.c_str() + USERNAME_LENGTH, userNames + (namesAdded * (USERNAME_LENGTH + 1) + 1));
+                namesAdded++;
+            }
+
+        }
+        seralizeAndSendData(XOsRequestType::LIST, userNames, (m_users.size() - 1) * (USERNAME_LENGTH + 1), clientSocket);
+        delete[] userNames;
+    }
         break;
     case XOsRequestType::DISCONNECT:
       
@@ -144,7 +160,6 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             std::set<char> currentChallenges { (char)senderId };
             m_challenges.insert(std::make_pair(challengedClient, currentChallenges));
         }
-        
         break;
     }
     
@@ -160,8 +175,8 @@ void XOsServer::outputRequest(char* recvBuffer) {
     case XOsRequestType::JOIN:
         std::cout << "JOIN ";
         break;
-    case XOsRequestType::ACCEPT:
-        std::cout << "ACCEPT ";
+    case XOsRequestType::CHALLENGERS:
+        std::cout << "CHALLENGERS ";
         break;
     case XOsRequestType::DISCONNECT:
         std::cout << "DISCONNECT ";

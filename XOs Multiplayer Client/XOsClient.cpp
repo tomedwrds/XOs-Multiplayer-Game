@@ -69,7 +69,14 @@ void XOsClient::clientActive() {
             deserializeData(recvbuf);
         }
         else if (selectedOption == 2) {
+            seralizeAndSendData(XOsRequestType::CHALLENGERS, (char*)&m_id, 1);
+            char recvbuf[DEFAULT_BUFFER_LENGTH];
+            int recvbuflen = DEFAULT_BUFFER_LENGTH;
 
+            if (recv(m_socket, recvbuf, recvbuflen, 0) < 0) {
+                clientError("Failed to recieve");
+            }
+            deserializeData(recvbuf);
         }
         else if (selectedOption == 3) {
 
@@ -140,7 +147,7 @@ void XOsClient::deserializeData(char* recvBuffer) {
             std::cout << "You have succesfully connected to the server " << m_userName << ".\n";
         }
         break;
-    case XOsRequestType::ACCEPT:
+    case XOsRequestType::CHALLENGERS:
         break;
     case XOsRequestType::DISCONNECT:   
         break;
@@ -202,8 +209,8 @@ void XOsClient::outputRequest(char* recvBuffer) {
             std::cout << "JOIN ";
             std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (int) recvBuffer[HEADER_SIZE] << '\n';
         break;
-    case XOsRequestType::ACCEPT:
-            std::cout << "ACCEPT ";
+    case XOsRequestType::CHALLENGERS:
+            std::cout << "CHALLENGERS ";
             std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
         break;
     case XOsRequestType::DISCONNECT:
