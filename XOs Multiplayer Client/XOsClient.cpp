@@ -101,6 +101,7 @@ void XOsClient::clientJoin() {
 
 void XOsClient::seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize) {
     char* sendBuffer = new char[payloadSize + HEADER_SIZE];
+    std::memset(sendBuffer, 0, payloadSize + HEADER_SIZE);
     sendBuffer[0] = rt;
     if (m_id == -1) {
         sendBuffer[1] = 0;
@@ -152,7 +153,9 @@ void XOsClient::deserializeData(char* recvBuffer) {
         }
         int challengedUser{ -1 };
         do {
-
+            if (!m_debug) {
+                std::system("CLS");
+            }
             std::cout << "=====================================================\n";
             std::cout << m_userName << " select one of the following to challenge\n";
             for (int i = 0; i * 16 < payloadSize; i++) {
@@ -165,7 +168,8 @@ void XOsClient::deserializeData(char* recvBuffer) {
         } while (challengedUser < -1 || challengedUser >(payloadSize / 16));
 
         if (challengedUser != -1) {
-            seralizeAndSendData(XOsRequestType::CHALLENGE, idMappings +(challengedUser-1), 1);
+            char remapepdId = idMappings[challengedUser - 1];
+            seralizeAndSendData(XOsRequestType::CHALLENGE, &remapepdId, 1);
 
         }
 

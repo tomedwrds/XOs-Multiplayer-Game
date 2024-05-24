@@ -9,6 +9,7 @@
 #include <thread>
 #include <algorithm>
 #include <map>
+#include <set>
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
 
@@ -32,4 +33,5 @@ private:
 	int m_debug{ true };
 	char m_totalUsers{ 0 };
 	std::map<std::string, char> m_users;
+	std::map<char, std::set<char>> m_challenges;
 };

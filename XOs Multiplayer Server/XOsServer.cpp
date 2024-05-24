@@ -74,6 +74,7 @@ void XOsServer::serverActive(int clientSocket) {
             serverError("Failed to recieve");
         } else if (dataSize > 0) {
             deserializeData(recvbuf, clientSocket);
+            std::memset(recvbuf, 0, DEFAULT_BUFFER_LENGTH);
         }
 
     } while (dataSize > 0);
@@ -130,6 +131,16 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
        
         break;
     case XOsRequestType::CHALLENGE:
+        char challengedClient = recvBuffer[HEADER_SIZE];
+        std::cout << (int)challengedClient;
+        if (m_challenges.count(challengedClient)) {
+            std::set<char> &currentChallenges = m_challenges.at(challengedClient);
+            currentChallenges.insert((char)senderId);
+        }
+        else {
+            std::set<char> currentChallenges { (char)senderId };
+            m_challenges.insert(std::make_pair(challengedClient, currentChallenges));
+        }
         
         break;
     }
