@@ -145,36 +145,45 @@ void XOsClient::deserializeData(char* recvBuffer) {
     case XOsRequestType::DISCONNECT:   
         break;
     case XOsRequestType::LIST:   
-    {
-        char* idMappings = new char[payloadSize / 16 + 1];
-        //create list to store mappings between display order and ID
-        for (int i = 0; i * 16 < payloadSize; i++) {
-            idMappings[i] = recvBuffer[HEADER_SIZE + i * 16];
-        }
-        int challengedUser{ -1 };
-        do {
-            if (!m_debug) {
-                std::system("CLS");
-            }
-            std::cout << "=====================================================\n";
-            std::cout << m_userName << " select one of the following to challenge\n";
+    
+        if (payloadSize > 0) {
+            char* idMappings = new char[payloadSize / 16 + 1];
+            //create list to store mappings between display order and ID
             for (int i = 0; i * 16 < payloadSize; i++) {
-                std::cout << "(" << i + 1 << ")" << std::string(recvBuffer + HEADER_SIZE + i * 16 + 1, recvBuffer + HEADER_SIZE + (i + 1) * 16) << "\n";
+                idMappings[i] = recvBuffer[HEADER_SIZE + i * 16];
             }
-            std::cout << "(-1) to go back\n";
-            std::cout << "=====================================================\n";
-            std::cin >> challengedUser;
+            int challengedUser{ -1 };
+            do {
+                if (!m_debug) {
+                    std::system("CLS");
+                }
+                std::cout << "=====================================================\n";
+                std::cout << m_userName << " select one of the following to challenge\n";
+                for (int i = 0; i * 16 < payloadSize; i++) {
+                    std::cout << "(" << i + 1 << ")" << std::string(recvBuffer + HEADER_SIZE + i * 16 + 1, recvBuffer + HEADER_SIZE + (i + 1) * 16) << "\n";
+                }
+                std::cout << "(-1) to go back\n";
+                std::cout << "=====================================================\n";
+                std::cin >> challengedUser;
 
-        } while (challengedUser < -1 || challengedUser >(payloadSize / 16));
+            } while (challengedUser < -1 || challengedUser >(payloadSize / 16));
 
-        if (challengedUser != -1) {
-            char remapepdId = idMappings[challengedUser - 1];
-            seralizeAndSendData(XOsRequestType::CHALLENGE, &remapepdId, 1);
+            if (challengedUser != -1) {
+                char remapepdId = idMappings[challengedUser - 1];
+                seralizeAndSendData(XOsRequestType::CHALLENGE, &remapepdId, 1);
+                std::cout << "Awaiting Response...\n";
+                while (1);
 
+            }
+
+            delete[] idMappings;
         }
-
-        delete[] idMappings;
-    }
+        else {
+            std::cout << "=====================================================\n";
+            std::cout << "No oponnets online to challenge\n";
+            std::cout << "=====================================================\n";
+        }
+    
        
         break;
     case XOsRequestType::MOVE:     
