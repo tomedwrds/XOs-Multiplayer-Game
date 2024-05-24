@@ -25,6 +25,7 @@ private:
 	void displayConnection(addrinfo*);
 	void seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize);
 	void outputRequest(char *);
+	void closeClient();
 	int m_socket{};
 	int m_debug{ true };
 	char m_id{-1};

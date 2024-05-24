@@ -144,15 +144,21 @@ void XOsClient::deserializeData(char* recvBuffer) {
     case XOsRequestType::DISCONNECT:   
         break;
     case XOsRequestType::LIST:   
+        char* idMappings = new char[payloadSize / 16];
+        //create list to store mappings between display order and ID
+        for (int i = 0; i * 16 < payloadSize; i++) {
+            idMappings[i] = recvBuffer[HEADER_SIZE + i * 16];
+        }
 
         std::cout << "=====================================================\n";
         std::cout << m_userName << " select one of the following to challenge\n";
         for (int i = 0; i*16 < payloadSize; i ++) {
             std::cout << "(" << i + 1 << ")" << std::string(recvBuffer + HEADER_SIZE + i * 16 + 1, recvBuffer + HEADER_SIZE + (i + 1) * 16) << "\n";
         }
+        std::cout << "(-1) to go back\n";
         std::cout << "=====================================================\n";
 
-
+        delete[] idMappings;
 
         break;
     case XOsRequestType::MOVE:     
@@ -202,6 +208,12 @@ void XOsClient::clientError(const std::string& errorMessage) {
     closesocket(m_socket);
     WSACleanup();
     exit(1);
+}
+
+void XOsClient::closeClient() {
+    closesocket(m_socket);
+    WSACleanup();
+    exit(0);
 }
 
 void XOsClient::displayConnection(addrinfo* addressInfo) {
