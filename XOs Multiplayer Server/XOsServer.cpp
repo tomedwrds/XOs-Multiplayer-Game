@@ -150,16 +150,29 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
        
         break;
     case XOsRequestType::CHALLENGE:
+        //check if responding to a challenge or instiating one
         char challengedClient = recvBuffer[HEADER_SIZE];
-        if (m_challenges.count(challengedClient)) {
-            m_challenges[challengedClient].insert(std::make_pair(senderId, false));
 
+        //check for in case of response to request
+        if (m_challenges.count(senderId)) {
+            if (m_challenges[senderId].count(challengedClient)) {
+                m_challenges[senderId][challengedClient] = true;
+                break;
+            }
+        }
+        if (m_challenges.count(challengedClient)) {
+            if (!m_challenges[challengedClient].count(senderId)) {
+                m_challenges[challengedClient].insert(std::make_pair(senderId, false));
+            }
         }
         else {
             std::map<char, bool> currentChallenges;
             currentChallenges.insert(std::make_pair(senderId, false));
             m_challenges.insert(std::make_pair(challengedClient, currentChallenges));
         }
+        //wait for challnege to be resolved by other client
+        while (!m_challenges[challengedClient][senderId]);
+        std::cout << "challenge accepted";
 
 
         break;
