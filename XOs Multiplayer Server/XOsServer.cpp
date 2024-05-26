@@ -109,12 +109,12 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
     case XOsRequestType::CHALLENGERS:
     {
         //get the list of challengers
-        std::set<char> challengers = m_challenges[senderId];
+        std::map<char, bool> challengers = m_challenges[senderId];
         char* userNames = new char[(challengers.size() * (USERNAME_LENGTH + 1))];
 
         char namesAdded = 0;
         for (auto const& x : m_users) {
-            if (challengers.find(x.second) != challengers.end()) {
+            if (challengers.count(x.second)) {
                 userNames[namesAdded * (USERNAME_LENGTH + 1)] = x.second;
                 std::copy(x.first.c_str(), x.first.c_str() + USERNAME_LENGTH, userNames + (namesAdded * (USERNAME_LENGTH + 1) + 1));
                 namesAdded++;
@@ -151,15 +151,17 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         break;
     case XOsRequestType::CHALLENGE:
         char challengedClient = recvBuffer[HEADER_SIZE];
-        std::cout << (int)challengedClient;
         if (m_challenges.count(challengedClient)) {
-            m_challenges[challengedClient].insert(senderId);
+            m_challenges[challengedClient].insert(std::make_pair(senderId, false));
 
         }
         else {
-            std::set<char> currentChallenges { (char)senderId };
+            std::map<char, bool> currentChallenges;
+            currentChallenges.insert(std::make_pair(senderId, false));
             m_challenges.insert(std::make_pair(challengedClient, currentChallenges));
         }
+
+
         break;
     }
     
@@ -174,25 +176,36 @@ void XOsServer::outputRequest(char* recvBuffer) {
     switch (rt) {
     case XOsRequestType::JOIN:
         std::cout << "JOIN ";
+        std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+
         break;
     case XOsRequestType::CHALLENGERS:
         std::cout << "CHALLENGERS ";
+        std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+
         break;
     case XOsRequestType::DISCONNECT:
         std::cout << "DISCONNECT ";
+        std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+
         break;
     case XOsRequestType::LIST:
         std::cout << "LIST ";
+        std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << '\n';
+
         break;
     case XOsRequestType::MOVE:
         std::cout << "MOVE ";
+        std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
+
         break;
     case XOsRequestType::CHALLENGE:
         std::cout << "CHALLENGE ";
+        std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (int) recvBuffer[HEADER_SIZE] << '\n';
+
         break;
     }
 
-    std::cout << "Sender:" << senderId << " Size:" << payloadSize << " Message:" << (recvBuffer + HEADER_SIZE) << '\n';
 
 }
 

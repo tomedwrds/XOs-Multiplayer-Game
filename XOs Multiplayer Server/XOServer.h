@@ -34,5 +34,5 @@ private:
 	int m_debug{ true };
 	char m_totalUsers{ 0 };
 	std::map<std::string, char> m_users;
-	std::map<char, std::set<char>> m_challenges;
+	std::map<char, std::map<char, bool>> m_challenges;
 };
