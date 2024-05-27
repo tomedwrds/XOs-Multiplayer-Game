@@ -156,6 +156,7 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         //check for in case of response to request
         if (m_challenges.count(senderId)) {
             if (m_challenges[senderId].count(challengedClient)) {
+                //send move data
                 m_challenges[senderId][challengedClient] = true;
                 break;
             }
