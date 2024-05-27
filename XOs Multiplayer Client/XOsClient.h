@@ -10,6 +10,10 @@
 
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
+#define CLIENT_IDLE 0
+#define CLIENT_WAITING 1
+#define CLIENT_INGAME 2
+
 
 #pragma comment(lib, "Ws2_32.lib")
 class XOsClient {

@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include "Game.h"
 #define DEFAULT_BUFFER_LENGTH 512
 #define DEFAULTPORT "5208"
 
@@ -32,6 +33,8 @@ private:
 	void outputRequest(char*);
 	int m_socket{};
 	int m_debug{ true };
+	std::map<char, Game> m_games;
+	char m_gameId{ 0 };
 	char m_totalUsers{ 0 };
 	std::map<std::string, char> m_users;
 	std::map<char, std::map<char, bool>> m_challenges;

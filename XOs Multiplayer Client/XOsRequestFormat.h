@@ -9,6 +9,7 @@ enum XOsRequestType : char {
     CHALLENGE,
     CHALLENGERS,
     MOVE,
+    GAME_STATE,
     DISCONNECT
 };
 

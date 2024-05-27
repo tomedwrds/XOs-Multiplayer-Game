@@ -9,8 +9,8 @@ public:
 	Game(char, char, char);
 	int makeMove(char);
 	char m_state[9];
-	char m_playerMoving;
-	char m_nonPlayerMoving;
 private:
 	char m_gameId;
+	char m_playerMoving;
+	char m_nonPlayerMoving;
 };

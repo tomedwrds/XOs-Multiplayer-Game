@@ -186,7 +186,8 @@ void XOsClient::deserializeData(char* recvBuffer) {
             std::cout << "=====================================================\n";
         }
         break;
-    case XOsRequestType::DISCONNECT:   
+    case XOsRequestType::GAME_STATE:
+        std::cout << (int)recvBuffer[HEADER_SIZE + 1];
         break;
     case XOsRequestType::LIST:   
     
