@@ -103,8 +103,9 @@ void XOsClient::clientActive() {
                 std::cout << "Please enter y position of your move\n";
                 std::cin >> y;
             } while (y >= 0 && y <= 3);
-            char movePos[3] {m_currentGame, x, y };
+            char movePos[2] {m_currentGame, y*3 + x};
             seralizeAndSendData(XOsRequestType::MOVE, movePos, 2);
+            m_state = CLIENT_WAITING;
         }
     }
 

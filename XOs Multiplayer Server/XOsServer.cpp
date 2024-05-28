@@ -147,7 +147,16 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         
         break;
     case XOsRequestType::MOVE:
-       
+    {
+        char gameId = recvBuffer[HEADER_SIZE];
+        Game &currentGame = m_games.at(gameId);
+        if (m_challenges[senderId].count(currentGame.m_nonPlayerMoving)) {
+            m_challenges[senderId][currentGame.m_nonPlayerMoving] = true;
+        }
+        currentGame.makeMove((char) recvBuffer[HEADER_SIZE + 1]);
+    }
+        
+
         break;
     case XOsRequestType::CHALLENGE:
         //check if responding to a challenge or instiating one
@@ -158,16 +167,13 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             if (m_challenges[senderId].count(challengedClient)) {
                 //create game instance
                 Game newGame = Game(senderId, challengedClient, m_gameId);
-                char gameData[10];
-                gameData[0] = m_gameId++;
-
-                memcpy(gameData + 1, newGame.m_state, 9);
                 m_games.insert(std::make_pair(m_gameId, newGame));
 
+                char gameData[10];
+                gameData[0] = m_gameId++;
+                memcpy(gameData + 1, newGame.m_state, 9);
+
                 seralizeAndSendData(XOsRequestType::GAME_STATE, gameData, 10, clientSocket);
-
-
-                //m_challenges[senderId][challengedClient] = true;
                 break;
             }
         }
@@ -182,8 +188,8 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             m_challenges.insert(std::make_pair(challengedClient, currentChallenges));
         }
         //wait for challnege to be resolved by other client
-        //while (!m_challenges[challengedClient][senderId]);
-        //std::cout << "challenge accepted";
+        while (!m_challenges[challengedClient][senderId]);
+        std::cout << "challenge accepted";
 
 
         break;
