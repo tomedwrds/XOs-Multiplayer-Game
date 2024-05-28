@@ -93,6 +93,9 @@ void XOsClient::clientActive() {
             }
             deserializeData(recvbuf);
         }
+        else if (m_state == CLIENT_INGAME) {
+
+        }
     }
 
 
@@ -197,7 +200,15 @@ void XOsClient::deserializeData(char* recvBuffer) {
         }
         break;
     case XOsRequestType::GAME_STATE:
-        std::cout << (int)recvBuffer[HEADER_SIZE + 1];
+        std::cout << "=====================================================\n";
+        std::cout << "Game state\n";
+        std::cout << (int)recvBuffer[HEADER_SIZE + 1] << '|' << (int)recvBuffer[HEADER_SIZE + 2] << '|' << (int)recvBuffer[HEADER_SIZE + 3] << '\n';
+        std::cout << "-|-|-\n";
+        std::cout << (int)recvBuffer[HEADER_SIZE + 4] << '|' << (int)recvBuffer[HEADER_SIZE + 5] << '|' << (int)recvBuffer[HEADER_SIZE + 6] << '\n';
+        std::cout << "-|-|-\n";
+        std::cout << (int)recvBuffer[HEADER_SIZE + 7] << '|' << (int)recvBuffer[HEADER_SIZE + 8] << '|' << (int)recvBuffer[HEADER_SIZE + 9] << '\n';
+        std::cout << "=====================================================\n";
+        m_state = CLIENT_INGAME;
         break;
     case XOsRequestType::LIST:   
     
