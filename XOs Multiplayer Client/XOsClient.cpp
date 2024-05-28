@@ -47,19 +47,44 @@ void XOsClient::createClient() {
 
 void XOsClient::clientActive() {
     while (1) {
-        if (!m_debug) {
-            std::system("CLS");
+        if (m_state == CLIENT_IDLE) {
+            if (!m_debug) {
+                std::system("CLS");
+            }
+            std::cout << "=====================================================\n";
+            std::cout << m_userName << " select one of the following\n";
+            std::cout << "(1) View other players and request to challenge them.\n";
+            std::cout << "(2) View players that have challenged you.\n";
+            std::cout << "(3) Exit\n";
+            std::cout << "=====================================================\n";
+            int selectedOption;
+            std::cin >> selectedOption;
+            if (selectedOption == 1) {
+                seralizeAndSendData(XOsRequestType::LIST, (char*)&m_id, 1);
+                char recvbuf[DEFAULT_BUFFER_LENGTH];
+                int recvbuflen = DEFAULT_BUFFER_LENGTH;
+
+                if (recv(m_socket, recvbuf, recvbuflen, 0) < 0) {
+                    clientError("Failed to recieve");
+                }
+                deserializeData(recvbuf);
+            }
+            else if (selectedOption == 2) {
+                seralizeAndSendData(XOsRequestType::CHALLENGERS, (char*)&m_id, 1);
+                char recvbuf[DEFAULT_BUFFER_LENGTH];
+                int recvbuflen = DEFAULT_BUFFER_LENGTH;
+
+                if (recv(m_socket, recvbuf, recvbuflen, 0) < 0) {
+                    clientError("Failed to recieve");
+                }
+                deserializeData(recvbuf);
+            }
+            else if (selectedOption == 3) {
+
+            }
         }
-        std::cout << "=====================================================\n";
-        std::cout << m_userName << " select one of the following\n";
-        std::cout << "(1) View other players and request to challenge them.\n";
-        std::cout << "(2) View players that have challenged you.\n";
-        std::cout << "(3) Exit\n";
-        std::cout << "=====================================================\n";
-        int selectedOption;
-        std::cin >> selectedOption;
-        if (selectedOption == 1) {
-            seralizeAndSendData(XOsRequestType::LIST, (char*) &m_id, 1);
+        else if (m_state == CLIENT_WAITING) {
+            std::cout << "WAITING..." << "\n";
             char recvbuf[DEFAULT_BUFFER_LENGTH];
             int recvbuflen = DEFAULT_BUFFER_LENGTH;
 
@@ -68,20 +93,6 @@ void XOsClient::clientActive() {
             }
             deserializeData(recvbuf);
         }
-        else if (selectedOption == 2) {
-            seralizeAndSendData(XOsRequestType::CHALLENGERS, (char*)&m_id, 1);
-            char recvbuf[DEFAULT_BUFFER_LENGTH];
-            int recvbuflen = DEFAULT_BUFFER_LENGTH;
-
-            if (recv(m_socket, recvbuf, recvbuflen, 0) < 0) {
-                clientError("Failed to recieve");
-            }
-            deserializeData(recvbuf);
-        }
-        else if (selectedOption == 3) {
-
-        }
-        
     }
 
 
@@ -173,8 +184,7 @@ void XOsClient::deserializeData(char* recvBuffer) {
             if (challengedUser != -1) {
                 char remapepdId = idMappings[challengedUser - 1];
                 seralizeAndSendData(XOsRequestType::CHALLENGE, &remapepdId, 1);
-                std::cout << "Awaiting Response...\n";
-                while (1);
+                m_state = CLIENT_WAITING;
 
             }
 
@@ -216,8 +226,7 @@ void XOsClient::deserializeData(char* recvBuffer) {
             if (challengedUser != -1) {
                 char remapepdId = idMappings[challengedUser - 1];
                 seralizeAndSendData(XOsRequestType::CHALLENGE, &remapepdId, 1);
-                std::cout << "Awaiting Response...\n";
-                while (1);
+                m_state = CLIENT_WAITING;
 
             }
 

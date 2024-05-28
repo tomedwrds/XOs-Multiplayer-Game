@@ -157,12 +157,13 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         if (m_challenges.count(senderId)) {
             if (m_challenges[senderId].count(challengedClient)) {
                 //create game instance
-                Game newGame{ Game(senderId, challengedClient, m_gameId) };
-                m_games.insert(std::make_pair(m_gameId, newGame));
+                Game newGame = Game(senderId, challengedClient, m_gameId);
                 char gameData[10];
                 gameData[0] = m_gameId++;
 
-                memcpy(newGame.m_state, gameData + 1, 9);
+                memcpy(gameData + 1, newGame.m_state, 9);
+                m_games.insert(std::make_pair(m_gameId, newGame));
+
                 seralizeAndSendData(XOsRequestType::GAME_STATE, gameData, 10, clientSocket);
 
 

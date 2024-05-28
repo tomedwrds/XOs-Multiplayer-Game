@@ -2,7 +2,7 @@
 
 Game::Game(char player1, char player2, char gameId) 
 	: m_playerMoving{ player1 }, m_nonPlayerMoving{ player2 }, m_gameId{ gameId } {
-	memset(m_state, 0, 9);
+	std::cout << m_state[0];
 }
 
 int Game::makeMove(char movePos) {
