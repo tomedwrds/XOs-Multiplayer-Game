@@ -182,8 +182,8 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             m_challenges.insert(std::make_pair(challengedClient, currentChallenges));
         }
         //wait for challnege to be resolved by other client
-        while (!m_challenges[challengedClient][senderId]);
-        std::cout << "challenge accepted";
+        //while (!m_challenges[challengedClient][senderId]);
+        //std::cout << "challenge accepted";
 
 
         break;

@@ -33,6 +33,7 @@ private:
 	int m_socket{};
 	int m_debug{ true };
 	char m_id{-1};
+	char m_currentGame{ -1 };
 	int m_state{ CLIENT_IDLE };
 	std::string m_userName;
 };

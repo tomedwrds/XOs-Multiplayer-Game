@@ -94,7 +94,17 @@ void XOsClient::clientActive() {
             deserializeData(recvbuf);
         }
         else if (m_state == CLIENT_INGAME) {
-
+            char x{}, y{};
+            do {
+                std::cout << "Please enter x position of your move\n";
+                std::cin >> x;
+            } while (x >= 0 && x <= 3);
+            do {
+                std::cout << "Please enter y position of your move\n";
+                std::cin >> y;
+            } while (y >= 0 && y <= 3);
+            char movePos[3] {m_currentGame, x, y };
+            seralizeAndSendData(XOsRequestType::MOVE, movePos, 2);
         }
     }
 
@@ -200,6 +210,7 @@ void XOsClient::deserializeData(char* recvBuffer) {
         }
         break;
     case XOsRequestType::GAME_STATE:
+        m_currentGame = recvBuffer[HEADER_SIZE];
         std::cout << "=====================================================\n";
         std::cout << "Game state\n";
         std::cout << (int)recvBuffer[HEADER_SIZE + 1] << '|' << (int)recvBuffer[HEADER_SIZE + 2] << '|' << (int)recvBuffer[HEADER_SIZE + 3] << '\n';
