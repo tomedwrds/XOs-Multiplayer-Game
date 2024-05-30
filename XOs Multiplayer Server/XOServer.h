@@ -34,8 +34,8 @@ private:
 	int m_socket{};
 	int m_debug{ true };
 	std::map<char, Game> m_games;
-	char m_gameId{ 0 };
+	char m_gameId{ 1 };
 	char m_totalUsers{ 0 };
 	std::map<std::string, char> m_users;
-	std::map<char, std::map<char, bool>> m_challenges;
+	std::map<char, std::map<char, char>> m_challenges;
 };

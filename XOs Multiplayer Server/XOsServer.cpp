@@ -109,7 +109,7 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
     case XOsRequestType::CHALLENGERS:
     {
         //get the list of challengers
-        std::map<char, bool> challengers = m_challenges[senderId];
+        std::map<char, char> challengers = m_challenges[senderId];
         char* userNames = new char[(challengers.size() * (USERNAME_LENGTH + 1))];
 
         char namesAdded = 0;
@@ -151,9 +151,19 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         char gameId = recvBuffer[HEADER_SIZE];
         Game &currentGame = m_games.at(gameId);
         if (m_challenges[senderId].count(currentGame.m_nonPlayerMoving)) {
-            m_challenges[senderId][currentGame.m_nonPlayerMoving] = true;
+            m_challenges[senderId][currentGame.m_nonPlayerMoving] = gameId; // make this set to game id
         }
         currentGame.makeMove((char) recvBuffer[HEADER_SIZE + 1]);
+
+        //hold execution if not current player
+        while (senderId == currentGame.m_nonPlayerMoving);
+        //send game state
+        //Game& currentGame = m_games.at(gameId);
+        char gameData[10];
+        gameData[0] = gameId;
+        memcpy(gameData + 1, currentGame.m_state, 9);
+
+        seralizeAndSendData(XOsRequestType::GAME_STATE, gameData, 10, clientSocket);
     }
         
 
@@ -183,13 +193,19 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
             }
         }
         else {
-            std::map<char, bool> currentChallenges;
-            currentChallenges.insert(std::make_pair(senderId, false));
+            std::map<char, char> currentChallenges;
+            currentChallenges.insert(std::make_pair(senderId, 0));
             m_challenges.insert(std::make_pair(challengedClient, currentChallenges));
         }
         //wait for challnege to be resolved by other client
         while (!m_challenges[challengedClient][senderId]);
-        std::cout << "challenge accepted";
+        Game& currentGame = m_games.at(m_challenges[challengedClient][senderId]);
+        char gameData[10];
+        gameData[0] = m_challenges[challengedClient][senderId];
+        memcpy(gameData + 1, currentGame.m_state, 9);
+
+        seralizeAndSendData(XOsRequestType::GAME_STATE, gameData, 10, clientSocket);
+
 
 
         break;
