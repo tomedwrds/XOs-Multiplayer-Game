@@ -9,7 +9,7 @@ int Game::makeMove(char movePos) {
 		
 		m_state[movePos] = m_playerMoving;
 		//add game win state logic here
-		char temp{ m_playerMoving };
+		char temp{ m_nonPlayerMoving };
 		m_nonPlayerMoving = m_playerMoving;
 		m_playerMoving = temp;
 	}

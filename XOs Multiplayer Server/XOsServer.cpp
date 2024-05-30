@@ -150,18 +150,14 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
     {
         char gameId = recvBuffer[HEADER_SIZE];
         Game &currentGame = m_games.at(gameId);
-        if (m_challenges[senderId].count(currentGame.m_nonPlayerMoving)) {
-            m_challenges[senderId][currentGame.m_nonPlayerMoving] = gameId; // make this set to game id
-        }
-        std::cout << (int)recvBuffer[HEADER_SIZE + 1];
         currentGame.makeMove(recvBuffer[HEADER_SIZE + 1]);
+        if (m_challenges[senderId].count(currentGame.m_playerMoving)) {
+            m_challenges[senderId][currentGame.m_playerMoving] = gameId;
+        }
+
 
         //hold execution if not current player
-        while (senderId == currentGame.m_nonPlayerMoving) {
-            //std::cout << "sender waiting" << (int)senderId << '\n';
-        };
-        //send game state
-        //Game& currentGame = m_games.at(gameId);
+        while (senderId == currentGame.m_nonPlayerMoving);
         char gameData[10];
         gameData[0] = gameId;
         memcpy(gameData + 1, currentGame.m_state, 9);
