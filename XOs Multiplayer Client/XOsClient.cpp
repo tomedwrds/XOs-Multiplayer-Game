@@ -94,16 +94,17 @@ void XOsClient::clientActive() {
             deserializeData(recvbuf);
         }
         else if (m_state == CLIENT_INGAME) {
-            char x{}, y{};
+            int x{}, y{};
             do {
                 std::cout << "Please enter x position of your move\n";
                 std::cin >> x;
-            } while (x >= 0 && x <= 3);
+            } while (x < 0 && x > 3);
             do {
                 std::cout << "Please enter y position of your move\n";
                 std::cin >> y;
-            } while (y >= 0 && y <= 3);
-            char movePos[2] {m_currentGame, y*3 + x};
+            } while (y < 0 && y > 3);
+            char moveTransformed = y * 3 + x;
+            char movePos[2] = {m_currentGame, moveTransformed };
             seralizeAndSendData(XOsRequestType::MOVE, movePos, 2);
             m_state = CLIENT_WAITING;
         }

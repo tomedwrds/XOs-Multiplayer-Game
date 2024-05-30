@@ -5,7 +5,7 @@ Game::Game(char player1, char player2, char gameId)
 }
 
 int Game::makeMove(char movePos) {
-	if (m_state[movePos] != 0) {
+	if (m_state[movePos] == 0) {
 		
 		m_state[movePos] = m_playerMoving;
 		//add game win state logic here
