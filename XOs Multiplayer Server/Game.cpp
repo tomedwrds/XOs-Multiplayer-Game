@@ -4,7 +4,7 @@ Game::Game(char player1, char player2, char gameId)
 	: m_playerMoving{ player1 }, m_nonPlayerMoving{ player2 }, m_gameId{ gameId } {
 }
 
-int Game::makeMove(char movePos) {
+char Game::makeMove(char movePos) {
 	if (m_state[movePos] == 0) {
 		
 		m_state[movePos] = m_playerMoving;
@@ -19,7 +19,7 @@ int Game::makeMove(char movePos) {
 	else {
 		return INVALID_MOVE;
 	}
-	return NO_MOVE_FLAG;
+	return NO_FLAG;
 }
 bool Game::checkWin() {
 	//first check all rows

@@ -182,7 +182,7 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
 
                 char gameData[11];
                 gameData[0] = m_gameId++;
-                gameData[1] = NO_MOVE_FLAG;
+                gameData[1] = NO_FLAG;
                 memcpy(gameData + 2, newGame.m_state, 9);
 
                 seralizeAndSendData(XOsRequestType::GAME_STATE, gameData, sizeof(gameData), clientSocket);
@@ -204,7 +204,7 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         Game& currentGame = m_games.at(m_challenges[challengedClient][senderId]);
         char gameData[11];
         gameData[0] = m_challenges[challengedClient][senderId];
-        gameData[1] = NO_MOVE_FLAG;
+        gameData[1] = NO_FLAG;
         memcpy(gameData + 2, currentGame.m_state, 9);
 
         seralizeAndSendData(XOsRequestType::GAME_STATE, gameData, sizeof(gameData), clientSocket);

@@ -96,13 +96,13 @@ void XOsClient::clientActive() {
         else if (m_state == CLIENT_INGAME) {
             int x{}, y{};
             do {
-                std::cout << "Please enter x position of your move\n";
+                std::cout << "Please enter a valid x position of your move (0-2)\n";
                 std::cin >> x;
-            } while (x < 0 && x > 3);
+            } while (x < 0 || x > 3);
             do {
-                std::cout << "Please enter y position of your move\n";
+                std::cout << "Please enter a valid y position of your move (0-2)\n";
                 std::cin >> y;
-            } while (y < 0 && y > 3);
+            } while (y < 0 || y > 3);
             char moveTransformed = y * 3 + x;
             char movePos[2] = {m_currentGame, moveTransformed };
             seralizeAndSendData(XOsRequestType::MOVE, movePos, 2);
@@ -214,12 +214,14 @@ void XOsClient::deserializeData(char* recvBuffer) {
     case XOsRequestType::GAME_STATE:
         m_currentGame = recvBuffer[HEADER_SIZE];
         std::cout << "=====================================================\n";
+        if(recvBuffer[HEADER_SIZE+1] == INVALID_MOVE)
+            std::cout << "MOVE INVALID: PLEASE TRY AGAIN\n";
         std::cout << "Game state\n";
-        std::cout << formatMove(recvBuffer[HEADER_SIZE + 1]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 2]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 3]) << '\n';
+        std::cout << formatMove(recvBuffer[HEADER_SIZE + 2]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 3]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 4]) << '\n';
         std::cout << "-|-|-\n";
-        std::cout << formatMove(recvBuffer[HEADER_SIZE + 4]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 5]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 6]) << '\n';
+        std::cout << formatMove(recvBuffer[HEADER_SIZE + 5]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 6]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 7]) << '\n';
         std::cout << "-|-|-\n";
-        std::cout << formatMove(recvBuffer[HEADER_SIZE + 7]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 8]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 9]) << '\n';
+        std::cout << formatMove(recvBuffer[HEADER_SIZE + 8]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 9]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 10]) << '\n';
         std::cout << "=====================================================\n";
         m_state = CLIENT_INGAME;
         break;

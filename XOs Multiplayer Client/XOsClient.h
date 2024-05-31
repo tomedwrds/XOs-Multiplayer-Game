@@ -13,7 +13,7 @@
 #define CLIENT_IDLE 0
 #define CLIENT_WAITING 1
 #define CLIENT_INGAME 2
-#define NO_MOVE_FLAG 0
+#define NO_FLAG 0
 #define INVALID_MOVE 1
 #define GAME_WON 2
 
