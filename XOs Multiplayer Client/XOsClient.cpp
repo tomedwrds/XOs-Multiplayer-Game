@@ -212,6 +212,7 @@ void XOsClient::deserializeData(char* recvBuffer) {
         }
         break;
     case XOsRequestType::GAME_STATE: {
+        std::system("CLS");
         m_state = CLIENT_INGAME;
         m_currentGame = recvBuffer[HEADER_SIZE];
         char moveFlag{ recvBuffer[HEADER_SIZE + 1] };
@@ -220,10 +221,17 @@ void XOsClient::deserializeData(char* recvBuffer) {
             std::cout << "MOVE INVALID: PLEASE TRY AGAIN\n";
         if (moveFlag == GAME_WON) {
             std::cout << "GAME WON CONGRATS!\n";
+            std::system("pause");
+            m_state = CLIENT_IDLE;
+        }
+        if (moveFlag == GAME_DRAW) {
+            std::cout << "GAME DRAWN\n";
+            std::system("pause");
             m_state = CLIENT_IDLE;
         }
         if (moveFlag == GAME_LOST) {
             std::cout << "GAME LOST HARD LUCK!\n";
+            std::system("pause");
             m_state = CLIENT_IDLE;
         }
         std::cout << "Game state\n";

@@ -39,7 +39,14 @@ char Game::checkWin() {
 		swapPlayerMoving();
 		return GAME_LOST;
 	}
-	return 0;
+
+	//check for draw ie return if a 0 is found
+	for (int i = 0; i < 9; i++) {
+		if (m_state[i] == 0)
+			return 0;
+	}
+	swapPlayerMoving();
+	return GAME_DRAW;
 	 
 }
 void Game::swapPlayerMoving() {

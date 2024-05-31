@@ -5,6 +5,7 @@
 #define INVALID_MOVE 1
 #define GAME_WON 2
 #define GAME_LOST 3
+#define GAME_DRAW 4
 
 class Game {
 public:

@@ -17,7 +17,7 @@
 #define INVALID_MOVE 1
 #define GAME_WON 2
 #define GAME_LOST 3
-
+#define GAME_DRAW 4
 
 #pragma comment(lib, "Ws2_32.lib")
 class XOsClient {
