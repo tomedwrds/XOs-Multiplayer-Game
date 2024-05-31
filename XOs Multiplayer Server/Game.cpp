@@ -30,12 +30,12 @@ char Game::checkWin() {
 	if ((m_state[0] && (m_state[0] == m_state[4]) && (m_state[4] == m_state[8])) || (m_state[2] && (m_state[2] == m_state[4]) && (m_state[4] == m_state[6])))
 		playerWon = m_state[4];
 	
-	if (m_playerMoving == checkWin()) {
+	if (m_playerMoving == playerWon) {
 		swapPlayerMoving();
 		return GAME_WON;
 	}
 		
-	if (m_nonPlayerMoving == checkWin()) {
+	if (m_nonPlayerMoving == playerWon) {
 		swapPlayerMoving();
 		return GAME_LOST;
 	}

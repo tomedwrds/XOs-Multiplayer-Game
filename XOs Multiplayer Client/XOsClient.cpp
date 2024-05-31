@@ -211,11 +211,21 @@ void XOsClient::deserializeData(char* recvBuffer) {
             std::cout << "=====================================================\n";
         }
         break;
-    case XOsRequestType::GAME_STATE:
+    case XOsRequestType::GAME_STATE: {
+        m_state = CLIENT_INGAME;
         m_currentGame = recvBuffer[HEADER_SIZE];
+        char moveFlag{ recvBuffer[HEADER_SIZE + 1] };
         std::cout << "=====================================================\n";
-        if(recvBuffer[HEADER_SIZE+1] == INVALID_MOVE)
+        if (moveFlag == INVALID_MOVE)
             std::cout << "MOVE INVALID: PLEASE TRY AGAIN\n";
+        if (moveFlag == GAME_WON) {
+            std::cout << "GAME WON CONGRATS!\n";
+            m_state = CLIENT_IDLE;
+        }
+        if (moveFlag == GAME_LOST) {
+            std::cout << "GAME LOST HARD LUCK!\n";
+            m_state = CLIENT_IDLE;
+        }
         std::cout << "Game state\n";
         std::cout << formatMove(recvBuffer[HEADER_SIZE + 2]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 3]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 4]) << '\n';
         std::cout << "-|-|-\n";
@@ -223,8 +233,8 @@ void XOsClient::deserializeData(char* recvBuffer) {
         std::cout << "-|-|-\n";
         std::cout << formatMove(recvBuffer[HEADER_SIZE + 8]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 9]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 10]) << '\n';
         std::cout << "=====================================================\n";
-        m_state = CLIENT_INGAME;
         break;
+    }
     case XOsRequestType::LIST:   
     
         if (payloadSize > 0) {

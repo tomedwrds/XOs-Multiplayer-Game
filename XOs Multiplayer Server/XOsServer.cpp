@@ -162,8 +162,8 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         char gameData[11];
         gameData[0] = gameId;
         gameData[1] = moveFlag;
-
-        if (char whoWon = currentGame.checkWin()) {
+        char whoWon = currentGame.checkWin();
+        if (whoWon) {
             gameData[1] = whoWon;
         }
        
