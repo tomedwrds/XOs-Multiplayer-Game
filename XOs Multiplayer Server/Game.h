@@ -11,8 +11,9 @@ public:
 	int makeMove(char);
 	char m_nonPlayerMoving;
 	char m_playerMoving;
-
+	
 	char m_state[9]{};
 private:
 	char m_gameId;
+	bool checkWin();
 };
