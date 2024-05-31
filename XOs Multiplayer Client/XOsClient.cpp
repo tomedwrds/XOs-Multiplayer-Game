@@ -215,11 +215,11 @@ void XOsClient::deserializeData(char* recvBuffer) {
         m_currentGame = recvBuffer[HEADER_SIZE];
         std::cout << "=====================================================\n";
         std::cout << "Game state\n";
-        std::cout << (int)recvBuffer[HEADER_SIZE + 1] << '|' << (int)recvBuffer[HEADER_SIZE + 2] << '|' << (int)recvBuffer[HEADER_SIZE + 3] << '\n';
+        std::cout << formatMove(recvBuffer[HEADER_SIZE + 1]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 2]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 3]) << '\n';
         std::cout << "-|-|-\n";
-        std::cout << (int)recvBuffer[HEADER_SIZE + 4] << '|' << (int)recvBuffer[HEADER_SIZE + 5] << '|' << (int)recvBuffer[HEADER_SIZE + 6] << '\n';
+        std::cout << formatMove(recvBuffer[HEADER_SIZE + 4]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 5]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 6]) << '\n';
         std::cout << "-|-|-\n";
-        std::cout << (int)recvBuffer[HEADER_SIZE + 7] << '|' << (int)recvBuffer[HEADER_SIZE + 8] << '|' << (int)recvBuffer[HEADER_SIZE + 9] << '\n';
+        std::cout << formatMove(recvBuffer[HEADER_SIZE + 7]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 8]) << '|' << formatMove(recvBuffer[HEADER_SIZE + 9]) << '\n';
         std::cout << "=====================================================\n";
         m_state = CLIENT_INGAME;
         break;
@@ -306,6 +306,18 @@ void XOsClient::outputRequest(char* recvBuffer) {
         break;
     }
     
+}
+
+char XOsClient::formatMove(char state) {
+    if (state == 0) {
+        return ' ';
+    } 
+    else if (state == m_id) {
+        return 'X';
+    }
+    else {
+        return 'O';
+    }
 }
 
 

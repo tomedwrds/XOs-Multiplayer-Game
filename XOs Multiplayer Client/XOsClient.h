@@ -30,6 +30,7 @@ private:
 	void seralizeAndSendData(XOsRequestType rt, char* payload, char payloadSize);
 	void outputRequest(char *);
 	void closeClient();
+	char formatMove(char);
 	int m_socket{};
 	int m_debug{ true };
 	char m_id{-1};
