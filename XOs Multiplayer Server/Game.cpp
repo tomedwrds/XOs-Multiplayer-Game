@@ -19,6 +19,7 @@ int Game::makeMove(char movePos) {
 	else {
 		return INVALID_MOVE;
 	}
+	return NO_MOVE_FLAG;
 }
 bool Game::checkWin() {
 	//first check all rows
