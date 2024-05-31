@@ -162,6 +162,11 @@ void XOsServer::deserializeData(char* recvBuffer, int clientSocket) {
         char gameData[11];
         gameData[0] = gameId;
         gameData[1] = moveFlag;
+
+        if (char whoWon = currentGame.checkWin()) {
+            gameData[1] = whoWon;
+        }
+       
         memcpy(gameData + 2, currentGame.m_state, 9);
 
         seralizeAndSendData(XOsRequestType::GAME_STATE, gameData, sizeof(gameData), clientSocket);
